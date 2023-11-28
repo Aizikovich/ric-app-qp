@@ -70,6 +70,7 @@ class DATABASE(object):
         query = """select * from {}""".format(meas)
         query += """ where "{}" = \'{}\'""".format(param, Id)
         query += "  ORDER BY DESC LIMIT {}".format(limit)
+        print(f"in {__name__} read_data(), query: {query}")
         self.query(query, meas, Id)
 
     def query(self, query, meas, Id=False):

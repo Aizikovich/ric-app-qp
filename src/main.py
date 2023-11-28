@@ -97,9 +97,12 @@ def predict(payload):
     output = {}
     payload = json.loads(payload)
     ue_list = payload['UEPredictionSet']
+    print(f"column names {db.columns}")
+    print(f"a. UE list: {ue_list}")
     for ueid in ue_list:
         tp = {}
         cell_list = cells(ueid)
+        print(f"b. Cell list: {cell_list}")
         for cid in cell_list:
             train_model(cid)
             mcid = cid.replace('/', '')

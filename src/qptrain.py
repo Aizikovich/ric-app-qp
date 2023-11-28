@@ -59,6 +59,7 @@ class PROCESS(object):
         for name, column in df.iteritems():
             res_adf.append(self.adfuller_test(column))  # Perform ADF test
         if not all(res_adf):
+            print('Data is not stationary')
             self.data = df.diff().dropna()
             self.diff += 1
 
@@ -119,11 +120,14 @@ def train_cid(cid):
      call process() to forecast the downlink and uplink of the input cell id
      Make a VAR model, call the fit method with the desired lag order.
     """
-    # print(f'Training for {cid}')
+    print(f'Training for {cid}')
     db.read_data(cellid=cid, limit=4800)
+    print(f'c. last n reports: {db.head()}')
+    print(f'data after read {db.data.shape}, type {type(db.data)}')
     md = PROCESS(db.data)
     if md.data is not None and not md.constant():
         md.process()
+        print(f'data after process {md.data.shape}, type {type(md.data)}, columns {md.data.columns}, head {md.data.head()}')
         lag = md.optimize_lag(md.data)
         model = VAR(md.data)          # Make a VAR model
         try:
