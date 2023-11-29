@@ -126,12 +126,17 @@ def train_cid(cid):
     """
     print(f'Training for {cid}')
     db.read_data(cellid=cid, limit=4800)
-    print(f'c. last n reports: {db.head()}')
-    print(f'data after read {db.data.shape}, type {type(db.data)}')
+    try:
+        print(f'data after read {db.data.shape}, type {type(db.data)}')
+    except AttributeError:
+        print("no data.shape")
     md = PROCESS(db.data)
     if md.data is not None and not md.constant():
         md.process()
-        print(f'data after process {md.data.shape}, type {type(md.data)}, columns {md.data.columns}, head {md.data.head()}')
+        try:
+            print(f'data after process {md.data.shape}, type {type(md.data)}, columns {md.data.columns}, head {md.data.head()}')
+        except AttributeError:
+            print("no data.shape")
         lag = md.optimize_lag(md.data)
         model = VAR(md.data)          # Make a VAR model
         try:
