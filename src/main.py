@@ -97,7 +97,10 @@ def predict(payload):
     output = {}
     payload = json.loads(payload)
     ue_list = payload['UEPredictionSet']
-    print(f"column names {db.columns}")
+    try:
+        print(f"column names {db.data.columns}")
+    except AttributeError:
+        print(f"db.data is type {type(db.data)}")
     print(f"a. UE list: {ue_list}")
     for ueid in ue_list:
         tp = {}
