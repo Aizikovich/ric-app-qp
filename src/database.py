@@ -67,6 +67,7 @@ class DATABASE(object):
             limit = 1
             Id = ueid
 
+        # select * from {Measurement} where {param} = {Id} ORDER BY DESC LIMIT {limit}
         query = """select * from {}""".format(meas)
         query += """ where "{}" = \'{}\'""".format(param, Id)
         query += "  ORDER BY DESC LIMIT {}".format(limit)

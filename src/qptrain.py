@@ -65,16 +65,12 @@ class PROCESS(object):
 
     def invert_transformation(self, inp, forecast):
         """Revert back the differencing to get the forecast to original scale."""
-        print(f"in forecast function qptrain.py\ninp: {inp}\nforecast: {forecast}")
         if self.diff == 0:
-            print("data is not stationary")
             return forecast
-        print("***********data is stationary***********")
         df = forecast.copy()
         columns = inp.columns
         for col in columns:
             df[col] = inp[col].iloc[-1] + df[col].cumsum()
-        print(f"df after cumsum: {df}")
         self.diff = 0
         return df
 
