@@ -75,7 +75,7 @@ def populatedb():
 
 @app.route('/receive', methods=['POST'])
 def receive():
-    db = INSERTDATA()
+
     try:
         received_data = request.json
         print("Received data:", pd.DataFrame(received_data), flush=True)
@@ -93,4 +93,5 @@ def receive():
 
 
 if __name__ == "__main__":
+    db = INSERTDATA()
     app.run(port=5000)
