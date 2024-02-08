@@ -23,7 +23,9 @@ import time
 import pandas as pd
 from src.database import DATABASE
 from configparser import ConfigParser
+from flask import Flask, request
 
+app = Flask(__name__)
 
 class INSERTDATA(DATABASE):
 
@@ -44,7 +46,17 @@ class INSERTDATA(DATABASE):
         print("DROP MEASUREMENT: " + measname)
         self.client.query('DROP MEASUREMENT '+measname)
 
-    def assign_timestamp(self, df):
+    # def assign_timestamp(self, df):
+    #     steps = df['measTimeStampRf'].unique()
+    #     for timestamp in steps:
+    #         d = df[df['measTimeStampRf'] == timestamp]
+    #         d.index = pd.date_range(start=datetime.datetime.now(), freq='1ms', periods=len(d))
+    #         self.client.write_points(d, self.cellmeas)
+    #         time.sleep(0.4)
+    def assign_timestamp(self, data):
+        df = pd.DataFrame(data)
+        # Do something with the data here
+        time.sleep(1)  # Simulate a delay
         steps = df['measTimeStampRf'].unique()
         for timestamp in steps:
             d = df[df['measTimeStampRf'] == timestamp]
@@ -61,6 +73,24 @@ def populatedb():
     while True:
         db.assign_timestamp(df)
 
+@app.route('/receive', methods=['POST'])
+def receive():
+    db = INSERTDATA()
+    try:
+        received_data = request.json
+        print("Received data:", pd.DataFrame(received_data), flush=True)
+        if received_data is not None:
+            db.assign_timestamp(received_data)
+            received_data = None
+        else:
+            db.assign_timestamp("No data received")
+            time.sleep(1)
+        return "Data received successfully!"
+
+    except Exception as e:
+        print("Error:", e, flush=True)
+        return "Error occurred while receiving data"
+
 
 if __name__ == "__main__":
-    populatedb()
+    app.run(port=5000)
