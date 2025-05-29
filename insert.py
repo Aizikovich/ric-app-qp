@@ -83,7 +83,7 @@ def receive():
             db.assign_timestamp(received_data)
             received_data = None
         else:
-            db.assign_timestamp("No data received")
+            # db.assign_timestamp("No data received")
             time.sleep(1)
         return "Data received successfully!"
 
@@ -94,4 +94,6 @@ def receive():
 
 if __name__ == "__main__":
     db = INSERTDATA()
+    # db.dropdb('RIC-Test')
+    # db.createdb('RIC-Test')
     app.run(port=5000)
