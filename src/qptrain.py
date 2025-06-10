@@ -59,7 +59,7 @@ class PROCESS(object):
         for name, column in df.iteritems():
             res_adf.append(self.adfuller_test(column))  # Perform ADF test
         if not all(res_adf):
-            print('Data is not stationary')
+            # print('Data is not stationary')
             self.data = df.diff().dropna()
             self.diff += 1
 
@@ -109,7 +109,8 @@ class PROCESS(object):
                 if rmse < best_score:
                     best_score, best_lag = rmse, l
             except ValueError as v:
-                print(v)
+                # print(v)
+                pass
         # print('Best VAR%s RMSE=%.3f' % (best_lag, best_score))
         return best_lag
 
@@ -120,19 +121,19 @@ def train_cid(cid):
      call process() to forecast the downlink and uplink of the input cell id
      Make a VAR model, call the fit method with the desired lag order.
     """
-    print(f'Training for {cid}')
+    # print(f'Training for {cid}')
     db.read_data(cellid=cid, limit=4800)
-    try:
-        print(f'data after read {db.data.shape}, type {type(db.data)}')
-    except AttributeError:
-        print("no data.shape")
+    # try:
+    #     print(f'data after read {db.data.shape}, type {type(db.data)}')
+    # except AttributeError:
+    #     print("no data.shape")
     md = PROCESS(db.data)
     if md.data is not None and not md.constant():
         md.process()
-        try:
-            print(f'data after process {md.data.shape}, type {type(md.data)}, columns {md.data.columns}, head {md.data.head()}')
-        except AttributeError:
-            print("no data.shape")
+        # try:
+        #     print(f'data after process {md.data.shape}, type {type(md.data)}, columns {md.data.columns}, head {md.data.head()}')
+        # except AttributeError:
+        #     print("no data.shape")
         lag = md.optimize_lag(md.data)
         model = VAR(md.data)          # Make a VAR model
         try:
